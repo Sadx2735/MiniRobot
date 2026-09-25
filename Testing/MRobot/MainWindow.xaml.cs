@@ -9,12 +9,13 @@ using System.Windows.Media.Imaging;
 using System.IO.Ports;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace MRobot {
    public partial class MainWindow : Window {
       public MainWindow () {
          InitializeComponent ();
-         mArduino = new SerialPort ("COM3", 9600);
+         mArduino = new SerialPort ("COM5", 9600);
          try {
             mArduino.Open ();
             StatusLabel.Content = "Connected";
@@ -24,11 +25,33 @@ namespace MRobot {
          }
       }
 
+      #region Implementations ---------------------------------------
+
       void ToggleState (object sender, RoutedEventArgs e) {
-         var nState = mMotorState is EState.Running ? EState.Stopped : EState.Running;
-         mMotorState = nState;
-         if (mMotorState is EState.Running) mArduino.WriteLine ("1");
-         else mArduino.WriteLine ("0");
+         mArduino.WriteLine ($"{mS1},{mS2},{mS3}");
+      }
+
+      void Slide (object sender, RoutedPropertyChangedEventArgs<double> e) {
+         if (sender is Slider btn) {
+            string name = btn.Name;
+            Debug.WriteLine ($"Name of the Sender is {name}");
+            int steps = (int)e.NewValue;
+            Debug.WriteLine ($"The Updated value is {steps}");
+            switch (name) {
+               case "Sliderx1":
+                  mS1 = steps;
+                  SliderLabel1.Content = $"To Move : {steps}";
+                  break;
+               case "Sliderx2":
+                  mS2 = steps;
+                  SliderLabel2.Content = $"To Move : {steps}";
+                  break;
+               default:
+                  mS3 = steps;
+                  SliderLabel3.Content = $"To Move : {steps}";
+                  break;
+            }
+         }
       }
 
       void DisconnectPort () {
@@ -41,12 +64,11 @@ namespace MRobot {
          DisconnectPort ();
          base.OnClosed (e);
       }
+      #endregion
 
       #region Fields ------------------------------------------------
       SerialPort mArduino;
-      EState mMotorState = EState.Running;
+      int mS1,mS2,mS3;
       #endregion
    }
 }
-
-public enum EState { Running, Stopped };

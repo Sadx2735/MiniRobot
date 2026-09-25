@@ -9,7 +9,13 @@
     <Grid>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
             <Label x:Name="StatusLabel" Content="Disconnected" />
-            <Button x:Name="ToggleButton" Click="ToggleState">Change-State</Button>
+            <Slider x:Name="Sliderx1" ValueChanged="Slide" Minimum="0" Maximum="255" Value="0"/>
+            <Label x:Name="SliderLabel1" Content="To Move : 0" />
+            <Slider x:Name="Sliderx2" ValueChanged="Slide" Minimum="0" Maximum="255" Value="0"/>
+            <Label x:Name="SliderLabel2" Content="To Move : 0" />
+            <Slider x:Name="Sliderx3" ValueChanged="Slide" Minimum="0" Maximum="255" Value="0"/>
+            <Label x:Name="SliderLabel3" Content="To Move : 0" />
+            <Button x:Name="Trigger" Click="ToggleState" Content="Trigger" />
         </StackPanel>
     </Grid>
 </Window>
